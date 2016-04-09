@@ -3,15 +3,16 @@
 var request = require('request');
 var express = require('express');
 var app     = express();
+var port    = process.env.PORT || 5000;
 
 app.get('/callback', function(req, res) {
   if (req.method !== 'POST') {
     return;
   }
 
-  var params = (JSON.parse(req.body)).result.content;
+  let params = (JSON.parse(req.body)).result.content;
 
-  var options = {
+  let options = {
     url     : 'https://trialbot-api.line.me/v1/events',
     headers : {
       'Content-Type'                 : 'application/json; charser=UTF-8',
@@ -21,7 +22,7 @@ app.get('/callback', function(req, res) {
     }
   };
 
-  var messages = {
+  let messages = {
     'to'        : params.to[0],
     'toChannel' : 1383378250,
     'eventType' : '138311608800106203',
@@ -42,4 +43,6 @@ app.get('/callback', function(req, res) {
 
 });
 
-app.listen();
+app.listen(port, function() {
+  console.log("Amadeus is running on http://localhost:" + port);
+});
