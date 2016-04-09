@@ -8,7 +8,18 @@ var port       = process.env.PORT || 5000;
 
 app.use(bodyParser.json());
 app.post('/callback', function(req, res) {
-  let result = req.body;
+  let result = req.body.result[0];
+
+  let messages = {
+    'to'        : [result.content.from],
+    'toChannel' : 1383378250,
+    'eventType' : '138311608800106203',
+    'content'   : {
+      'contentType' : 1,
+      'toType'      : 1,
+      'text'        : result.content.text
+    },
+  };
 
   let options = {
     'url'     : 'https://trialbot-api.line.me/v1/events',
@@ -18,28 +29,22 @@ app.post('/callback', function(req, res) {
       'X-Line-ChannelID'             : process.env.CHANNEL_ID,
       'X-Line-ChannelSecret'         : process.env.CHANNEL_SECRET,
       'X-Line-Trusted-User-With-ACL' : process.env.MID
-    }
-  };
-
-  let messages = {
-    'to'        : [result.result[0].content.from],
-    'toChannel' : 1383378250,
-    'eventType' : '138311608800106203',
-    'content'   : {
-      'contentType' : 1,
-      'toType'      : 1,
-      'text'        : result.result[0].content.text
     },
-    'proxy'     : process.env.FIXIE_URL
+    'body'    : JSON.stringify(messages)
   };
 
-  request(options, function(error, res, body) {
+  var customRequest = request.defaults({'proxy' : process.env.FIXIE_URL})
+
+  customRequest(options, function(error, res, body) {
     if (!error && res.statusCode === 200) {
       console.log('OK');
     } else {
       console.log('Failed');
+      console.log(JSON.stringify(res));
     }
   });
+
+  res.end();
 
 });
 
