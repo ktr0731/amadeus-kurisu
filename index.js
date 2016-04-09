@@ -18,7 +18,7 @@ app.get('/callback', function(req, res) {
       'Content-Type'                 : 'application/json; charser=UTF-8',
       'X-Line-ChannelID'             : process.env.CHANNEL_ID,
       'X-Line-ChannelSecret'         : process.env.CHANNEL_SECRET,
-      'X-Line-Trusted-User-With-ACL' : process.env.CHANNEL_MID
+      'X-Line-Trusted-User-With-ACL' : process.env.MID
     }
   };
 
@@ -30,7 +30,8 @@ app.get('/callback', function(req, res) {
       'contentType' : 1,
       'toType'      : 1,
       'text'        : params.text
-    }
+    },
+    'proxy'     : process.env.FIXIE_URL
   };
 
   request(options, function(error, res, body) {
