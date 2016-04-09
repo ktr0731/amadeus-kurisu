@@ -5,11 +5,7 @@ var express = require('express');
 var app     = express();
 var port    = process.env.PORT || 5000;
 
-app.get('/callback', function(req, res) {
-  if (req.method !== 'POST') {
-    return;
-  }
-
+app.post('/callback', function(req, res) {
   let params = (JSON.parse(req.body)).result.content;
 
   let options = {
