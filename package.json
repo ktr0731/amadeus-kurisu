@@ -17,7 +17,9 @@
   },
   "homepage": "https://github.com/lycoris0731/amadeus-kurisu#readme",
   "dependencies": {
+    "body-parser": "^1.15.0",
     "express": "^4.13.4",
     "request": "^2.70.0"
-  }
+  },
+  "devDependencies": {}
 }
