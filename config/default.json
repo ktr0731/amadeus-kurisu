@@ -1,0 +1,9 @@
+{
+  "Send" : {
+    "text"     : "text",
+    "image"    : "image",
+    "video"    : "video",
+    "audio"    : "audio",
+    "location" : "location"
+  }
+}
