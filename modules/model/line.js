@@ -8,15 +8,14 @@ var Line = function() {
    * for post request
    */
 
-  let customRequest  = request.defaults({'proxy' : process.env.FIXIE_URL});
+  this.customRequest  = request.defaults({'proxy' : process.env.FIXIE_URL});
 
-  let requestHandler = function(error, res, body) {
+  this.requestHandler = function(error, res, body) {
     if (!error && res.statusCode === 200) {
       console.log('OK');
     } else {
       console.log('Failed');
       console.log(JSON.stringify(res));
-      res.end();
     }
   };
 
@@ -24,14 +23,14 @@ var Line = function() {
    * for sending messages
    */
 
-  let content = {};
+  this.content = {};
 
-  let messages = {
+  this.messages = {
     'toChannel' : 1383378250,
     'eventType' : '138311608800106203'
   };
 
-  let options = {
+  this.options = {
     'url'     : 'https://trialbot-api.line.me/v1/events',
     'method'  : 'POST',
     'headers' : {
@@ -39,15 +38,14 @@ var Line = function() {
       'X-Line-ChannelID'             : process.env.CHANNEL_ID,
       'X-Line-ChannelSecret'         : process.env.CHANNEL_SECRET,
       'X-Line-Trusted-User-With-ACL' : process.env.MID
-    },
-    'body'    : JSON.stringify(messages)
+    }
   }
 };
 
 Line.prototype.send = function(to, content) {
   switch(content.contentType) {
     case 1:  // text
-      this.messages.to = to;
+      this.messages.to = [to];
 
       this.content.contentType = content.contentType;
       this.content.toType      = 1;  // Fixed value?
@@ -56,7 +54,9 @@ Line.prototype.send = function(to, content) {
   }
 
   this.messages.content = this.content;
-  customRequest(options, this.requestHandler);
+  this.options.body     = JSON.stringify(this.messages);
+
+  this.customRequest(this.options, this.requestHandler);
 };
 
 module.exports = Line;

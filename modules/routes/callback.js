@@ -14,6 +14,8 @@ router.post('/callback', function(req, res) {
 
   let line = new Line();
   line.send(result.content.from, content);
+
+  res.end();
 });
 
 module.exports = router;
