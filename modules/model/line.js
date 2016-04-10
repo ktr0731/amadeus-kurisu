@@ -1,9 +1,8 @@
 "use strict"
 
-var config = require('config');
 var request = require('request');
 
-var line = (function() {
+var Line = function() {
 
   /*
    * for post request
@@ -43,22 +42,21 @@ var line = (function() {
     },
     'body'    : JSON.stringify(messages)
   }
+};
 
-  let send = function(to, content) {
-    console.log(JSON.stringify(content));
-    switch(content.contentType) {
-      case config.get('Send.text'):
-        this.messages.to = to;
+Line.prototype.send = function(to, content) {
+  switch(content.contentType) {
+    case 1:  // text
+      this.messages.to = to;
 
-        this.content.contentType = content.contentType;
-        this.content.toType      = 1;  // Fixed value?
-        this.content.text        = content.text;
-        break;
-    }
+      this.content.contentType = content.contentType;
+      this.content.toType      = 1;  // Fixed value?
+      this.content.text        = content.text;
+      break;
+  }
 
-    messages.content = this.content;
-    customRequest(options, this.requestHandler);
-  };
-})();
+  this.messages.content = this.content;
+  customRequest(options, this.requestHandler);
+};
 
-module.exports = line;
+module.exports = Line;
