@@ -45,6 +45,7 @@ var line = (function() {
   }
 
   let send = function(to, content) {
+    console.log(JSON.stringify(content));
     switch(content.contentType) {
       case config.get('Send.text'):
         this.messages.to = to;
