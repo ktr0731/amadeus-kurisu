@@ -8,6 +8,8 @@ router.post('/callback', function(req, res) {
   let result = req.body.result[0];
   let content = {};
 
+  console.log(JSON.stringify(req.body));
+
   // Send message by text
   content.contentType = 1;
   content.text        = result.content.text;
