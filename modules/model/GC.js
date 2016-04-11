@@ -13,12 +13,16 @@ GC.prototype.fetchPlaces = function(p1) {
   // p1: LINE
 
   // Fetch places
-  //let p1Pref = (reg.exec(p1.address))[0];
   let p1Pref = (reg.exec(p1.address))[1];
-  request.get(util.format('http://nesica.net/playshop/search/?pref_id=' + prefectures[p1Pref] + '&nesica_id=2110'));
+
+  request.get(util.format('http://nesica.net/playshop/search/?pref_id=' + prefectures[p1Pref] + '&nesica_id=2110'), function(err, res, body) {
+    console.log(body);
+  });
   // Parse target prefecture
   console.log(prefectures[p1Pref]);
 };
 
 var a = new GC();
-a.fetchPlaces(null);
+var tmp = { 'address' : '' };
+tmp.address = "aaa bbb 福島県会津若松市";
+a.fetchPlaces(tmp);
