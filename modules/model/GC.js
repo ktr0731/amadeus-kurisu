@@ -9,7 +9,7 @@ var GC = function() {};
 
 GC.prototype.fetchPlaces = function(p1, callback) {
 
-  let reg = /.*\ .*\ (..[都道府県])/g;
+  let reg = /.*\ (..[都道府県])/g;
   // p1: LINE
 
   // Fetch places
@@ -29,9 +29,4 @@ GC.prototype.fetchPlaces = function(p1, callback) {
   // Parse target prefecture
 };
 
-var a = new GC();
-var tmp = { 'address' : '' };
-tmp = "aaa bbb 福島県会津若松市";
-a.fetchPlaces(tmp, function(places) {
-  console.log(places);
-});
+module.exports = GC;
