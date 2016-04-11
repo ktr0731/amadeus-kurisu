@@ -1,5 +1,6 @@
 "use strict"
 
+var GC      = require('../model/GC.js');
 var Line    = require('../model/line.js');
 var express = require('express');
 var router = express.Router();
