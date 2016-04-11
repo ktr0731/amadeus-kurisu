@@ -2,7 +2,7 @@
 
 var request     = require('request');
 var util        = require('util');
-var $           = require('jquery');
+var client      = require('cheerio-httpcli');
 var prefectures = (require('../../resources/prefectures.json'));
 
 var GC = function() {};
@@ -15,9 +15,16 @@ GC.prototype.fetchPlaces = function(p1) {
   // Fetch places
   let p1Pref = (reg.exec(p1.address))[1];
 
-  request.get(util.format('http://nesica.net/playshop/search/?pref_id=' + prefectures[p1Pref] + '&nesica_id=2110'), function(err, res, body) {
-    console.log(body);
+  let url = util.format('http://nesica.net/playshop/search/?pref_id=' + prefectures[p1Pref] + '&nesica_id=2110');
+  client.fetch(url, function(err, $, res, body) {
+    $('.find-list').each(function() {
+      $(this).each(function(i) {
+        console.log($(this).text());
+      });
+    });
+
   });
+
   // Parse target prefecture
   console.log(prefectures[p1Pref]);
 };
