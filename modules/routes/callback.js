@@ -17,7 +17,13 @@ router.post('/callback', function(req, res) {
 
   if (result.content.location != null) {
     let gc = new GC();
-    gc.fetchPlaces(result.content.location.address, function(places) {
+    let p = {
+      'address' : result.content.location.address,
+      'lat'     : result.content.location.latitude,
+      'lng'     : result.content.location.longitude
+    };
+
+    gc.fetchPlaces(p, function(places) {
       let text = '';
       for (let i=0; i < places.length; i++) {
         text += places[i][0] + "\r\n";

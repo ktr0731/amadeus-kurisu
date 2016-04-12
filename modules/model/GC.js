@@ -13,20 +13,33 @@ GC.prototype.fetchPlaces = function(p1, callback) {
   // p1: LINE
 
   // Fetch places
-  let p1Pref = (reg.exec(p1))[1];
+  let p1Pref = (reg.exec(p1.address))[1];
 
   let url = util.format('http://nesica.net/playshop/search/?pref_id=' + prefectures[p1Pref] + '&nesica_id=2110');
-  client.fetch(url, function(err, $, res, body) {
-    let places = [];
-    $('.find-list').each(function() {
-      $(this).each(function(i) {
-        places.push($(this).text().trim().replace(/\r?\n/g, '').split(/\s*\s/));
-      });
-    });
-    callback(places);
-  });
+  // client.fetch(url, function(err, $, res, body) {
+  //   let places = [];
+  //   $('.find-list').each(function() {
+  //     $(this).each(function(i) {
+  //       places.push($(this).text().trim().replace(/\r?\n/g, '').split(/\s*\s/));
+  //     });
+  //   });
+  //   callback(places);
+  //
+  // });
 
-  // Parse target prefecture
+  client.fetch(url)
+        .then(function(result) {
+          let places = [];
+          let $ = result.$;
+
+          $('.find-list').each(function() {
+            $(this).each(function(i) {
+              places.push($(this).text().trim().replace(/\r?\n/g, '').split(/\s*\s/));
+            });
+          });
+          callback(places);
+        });
+
 };
 
 module.exports = GC;
