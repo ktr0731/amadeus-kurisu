@@ -13,9 +13,7 @@ GC.prototype.fetchPlaces = function(p1, callback) {
 
   // Fetch places
   let p1Pref = (reg.exec(p1.address))[1];
-
   let url = 'http://nesica.net/playshop/search/?pref_id=' + prefectures[p1Pref] + '&nesica_id=2110';
-
   var places = [];
 
   client.fetch(url).then(function(result) {
@@ -26,10 +24,11 @@ GC.prototype.fetchPlaces = function(p1, callback) {
       $(this).each(function(i) {
         places.push($(this).text().trim().replace(/\r?\n/g, '').split('\t'));
       });
+
+      for (let i = 0; i < places.length; i++) {
+        places[i][0].trim();
+      }
     });
-
-
-    let shortest = { 'lat' : -1, 'lng' : -1 };
 
     let promises = [];
     for (let i = 0; i < places.length; i++) {
@@ -43,24 +42,26 @@ GC.prototype.fetchPlaces = function(p1, callback) {
     }
 
     Promise.all(promises).then(function() {
-      // if (shortest.lat === -1 && shortest.lng === -1) {
-      //   shortest.lat = p2.lat;
-      //   shortest.lng = p2.lng;
-      // }
-
       for (let i = 0; i < places.length; i++) {
         places[i].distance = getDistance(p1, places[i]);
       }
-      //places[i].distance = getDistance(p1, p2);
-      console.log("getDistance");
 
-    }).then(function() {
-      console.log(places);
+      places.sort(function(a, b) {
+        if (a.distance > b.distance) {
+          return 1;
+        } else if (a.distance < b.distance) {
+          return -1;
+        }
+
+        return 0;
+      });
+
       for (let i = 0; i < places.length; i++) {
         if (places[i].distance !== undefined) {
-          console.log(places[i][0] + ': ' + places[i].distance);
+          console.log(i + "番目 - " +places[i][0] + ': ' + places[i].distance + "(" + places[i].distance/1000 + "km)");
         }
       }
+
       callback(places);
     });
   });
@@ -70,13 +71,13 @@ GC.prototype.fetchPlaces = function(p1, callback) {
       request.get(options, function(err, res, body) {
         if (err || !body.Feature) {
           console.log('fetch error');
-          //reject(err);
           return;
         }
 
         let coord = body.Feature[0].Geometry.Coordinates;
         places[i].lat = (coord.split(','))[0];
         places[i].lng = (coord.split(','))[1];
+        console.log(places[i][0] + ": " + places[i].lat + ", " + places[i].lng);
 
         resolve();
       });
@@ -113,5 +114,6 @@ GC.prototype.fetchPlaces = function(p1, callback) {
 
     return distance;
   }
+
 };
 module.exports = GC;
