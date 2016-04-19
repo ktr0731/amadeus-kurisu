@@ -23,24 +23,50 @@ GC.prototype.fetchPlaces = function(p1, callback) {
 
     $('.find-list').each(function() {
       $(this).each(function(i) {
-        places.push($(this).text().trim().replace(/\r?\n/g, '').split(/\s*\s/));
+        places.push($(this).text().trim().replace(/\r?\n/g, '').split('\t'));
       });
     });
 
+
     let shortest = { 'lat' : -1, 'lng' : -1 };
 
+    let promises = [];
     for (let i = 0; i < places.length; i++) {
-      let pos = {};
-      // address
       let url = 'http://geo.search.olp.yahooapis.jp/OpenLocalPlatform/V1/geoCoder?output=json&appid=' + process.env.YAHOO_APP_ID + '&query=' + places[i][1];
       let options = {
         'url'  : url,
         'json' : true
       };
 
+      promises.push(getPosition(options));
+    }
+
+    Promise.all(promises).then(function(p2) {
+      if (shortest.lat === -1 && shortest.lng === -1) {
+        shortest.lat = p2.lat;
+        shortest.lng = p2.lng;
+      }
+
+      // places[i].distance = getDistance(p1, p2);
+
+      // 比較
+    }).then(function() {
+      console.log(places);
+      for (let i = 0; i < places.length; i++) {
+        if (places[i].distance !== undefined) {
+          console.log(places[i][0] + ': ' + places[i].distance);
+        }
+      }
+      callback(places);
+    });
+  });
+
+  function getPosition(options) {
+    return new Promise(function(resolve, reject) {
       request.get(options, function(err, res, body) {
         if (err || !body.Feature) {
           console.log('fetch error');
+          //reject(err);
           return;
         }
 
@@ -49,23 +75,10 @@ GC.prototype.fetchPlaces = function(p1, callback) {
         p2.lat = (coord.split(','))[0];
         p2.lng = (coord.split(','))[1];
 
-        if (shortest.lat === -1 && shortest.lng === -1) {
-          shortest.lat = p2.lat;
-          shortest.lng = p2.lng;
-        }
-
-        places[i].distance = getDistance(p1, p2);
+        resolve(p2);
       });
-    }
-
-    for (let i = 0; i < places.length; i++) {
-      if (places[i].distance !== undefined) {
-        console.log(places[i][0] + ': ' + places[i].distance);
-      }
-    }
-
-    callback(places);
-  });
+    });
+  }
 
   /**
    * from http://hamasyou.com/blog/2010/09/07/post-2/
@@ -94,8 +107,8 @@ GC.prototype.fetchPlaces = function(p1, callback) {
       var decimal_no = Math.pow(10, 5);
       distance = Math.round(decimal_no * distance / 1) / decimal_no;   // kmに変換するときは(1000で割る)
     }
+
     return distance;
   }
-
 };
 module.exports = GC;
