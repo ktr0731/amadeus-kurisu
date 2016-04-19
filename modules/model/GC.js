@@ -38,7 +38,7 @@ GC.prototype.fetchPlaces = function(p1, callback) {
         'json' : true
       };
 
-      promises.push(getPosition(options));
+      promises.push(getPosition(i, options));
     }
 
     Promise.all(promises).then(function(p2) {
@@ -47,7 +47,8 @@ GC.prototype.fetchPlaces = function(p1, callback) {
         shortest.lng = p2.lng;
       }
 
-      // places[i].distance = getDistance(p1, p2);
+      //places[i].distance = getDistance(p1, p2);
+      console.log("getDistance");
 
       // 比較
     }).then(function() {
@@ -61,7 +62,7 @@ GC.prototype.fetchPlaces = function(p1, callback) {
     });
   });
 
-  function getPosition(options) {
+  function getPosition(i, options) {
     return new Promise(function(resolve, reject) {
       request.get(options, function(err, res, body) {
         if (err || !body.Feature) {
@@ -72,6 +73,7 @@ GC.prototype.fetchPlaces = function(p1, callback) {
 
         let coord = body.Feature[0].Geometry.Coordinates;
         let p2 = {};
+        p2.id  = i;
         p2.lat = (coord.split(','))[0];
         p2.lng = (coord.split(','))[1];
 
