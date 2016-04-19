@@ -16,8 +16,9 @@ GC.prototype.fetchPlaces = function(p1, callback) {
 
   let url = 'http://nesica.net/playshop/search/?pref_id=' + prefectures[p1Pref] + '&nesica_id=2110';
 
+  var places = [];
+
   client.fetch(url).then(function(result) {
-    let places = [];
 
     let $ = result.$;
 
@@ -41,16 +42,18 @@ GC.prototype.fetchPlaces = function(p1, callback) {
       promises.push(getPosition(i, options));
     }
 
-    Promise.all(promises).then(function(p2) {
-      if (shortest.lat === -1 && shortest.lng === -1) {
-        shortest.lat = p2.lat;
-        shortest.lng = p2.lng;
-      }
+    Promise.all(promises).then(function() {
+      // if (shortest.lat === -1 && shortest.lng === -1) {
+      //   shortest.lat = p2.lat;
+      //   shortest.lng = p2.lng;
+      // }
 
+      for (let i = 0; i < places.length; i++) {
+        places[i].distance = getDistance(p1, places[i]);
+      }
       //places[i].distance = getDistance(p1, p2);
       console.log("getDistance");
 
-      // 比較
     }).then(function() {
       console.log(places);
       for (let i = 0; i < places.length; i++) {
@@ -72,12 +75,10 @@ GC.prototype.fetchPlaces = function(p1, callback) {
         }
 
         let coord = body.Feature[0].Geometry.Coordinates;
-        let p2 = {};
-        p2.id  = i;
-        p2.lat = (coord.split(','))[0];
-        p2.lng = (coord.split(','))[1];
+        places[i].lat = (coord.split(','))[0];
+        places[i].lng = (coord.split(','))[1];
 
-        resolve(p2);
+        resolve();
       });
     });
   }
