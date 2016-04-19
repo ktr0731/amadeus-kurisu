@@ -8,32 +8,32 @@ var GC = function() {};
 
 GC.prototype.fetchPlaces = function(p1, callback) {
 
-  let reg = /.*\ (..[都道府県])/g;
+  var reg = /.*\ (..[都道府県])/g;
   // p1: LINE
 
   // Fetch places
-  let p1Pref = (reg.exec(p1.address))[1];
-  let url = 'http://nesica.net/playshop/search/?pref_id=' + prefectures[p1Pref] + '&nesica_id=2110';
+  var p1Pref = (reg.exec(p1.address))[1];
+  var url = 'http://nesica.net/playshop/search/?pref_id=' + prefectures[p1Pref] + '&nesica_id=2110';
   var places = [];
 
   client.fetch(url).then(function(result) {
 
-    let $ = result.$;
+    var $ = result.$;
 
     $('.find-list').each(function() {
       $(this).each(function(i) {
         places.push($(this).text().trim().replace(/\r?\n/g, '').split('\t'));
       });
 
-      for (let i = 0; i < places.length; i++) {
+      for (var i = 0; i < places.length; i++) {
         places[i][0].trim();
       }
     });
 
-    let promises = [];
-    for (let i = 0; i < places.length; i++) {
-      let url = 'http://geo.search.olp.yahooapis.jp/OpenLocalPlatform/V1/geoCoder?output=json&appid=' + process.env.YAHOO_APP_ID + '&query=' + places[i][1];
-      let options = {
+    var promises = [];
+    for (var i = 0; i < places.length; i++) {
+      var url = 'http://geo.search.olp.yahooapis.jp/OpenLocalPlatform/V1/geoCoder?output=json&appid=' + process.env.YAHOO_APP_ID + '&query=' + encodeURIComponent(places[i][1]);
+      var options = {
         'url'  : url,
         'json' : true
       };
@@ -42,7 +42,7 @@ GC.prototype.fetchPlaces = function(p1, callback) {
     }
 
     Promise.all(promises).then(function() {
-      for (let i = 0; i < places.length; i++) {
+      for (var i = 0; i < places.length; i++) {
         places[i].distance = getDistance(p1, places[i]);
       }
 
@@ -56,7 +56,7 @@ GC.prototype.fetchPlaces = function(p1, callback) {
         return 0;
       });
 
-      for (let i = 0; i < places.length; i++) {
+      for (var i = 0; i < places.length; i++) {
         if (places[i].distance !== undefined) {
           console.log(i + "番目 - " +places[i][0] + ': ' + places[i].distance + "(" + places[i].distance/1000 + "km)");
         }
@@ -74,10 +74,9 @@ GC.prototype.fetchPlaces = function(p1, callback) {
           return;
         }
 
-        let coord = body.Feature[0].Geometry.Coordinates;
+        var coord = body.Feature[0].Geometry.Coordinates;
         places[i].lat = (coord.split(','))[0];
         places[i].lng = (coord.split(','))[1];
-        console.log(places[i][0] + ": " + places[i].lat + ", " + places[i].lng);
 
         resolve();
       });
