@@ -3,7 +3,7 @@
 var request     = require('request');
 var client      = require('cheerio-httpcli');
 var prefectures = require('../../resources/prefectures.json');
-var geolib      = reuire('geolib');
+var geolib      = require('geolib');
 
 var GC = function() {};
 
@@ -25,10 +25,6 @@ GC.prototype.fetchPlaces = function(p1, callback) {
       $(this).each(function(i) {
         places.push($(this).text().trim().replace(/\r?\n/g, '').split('\t'));
       });
-
-      for (var i = 0; i < places.length; i++) {
-        places[i][0].trim();
-      }
     });
 
     var promises = [];
@@ -44,8 +40,10 @@ GC.prototype.fetchPlaces = function(p1, callback) {
 
     Promise.all(promises).then(function() {
       for (var i = 0; i < places.length; i++) {
-        console.log(places[i]);
-        places[i].distance = getDistance(p1, places[i]);
+        if (places[i].lat !== undefined && places[i].lng !== undefined) {
+          console.log(p1.lat + ", " + p1.lng);
+          places[i].distance = geolib.getDistance({ latitude : p1.lat, longitude : p1.lng }, { latitude : places[i].lat, longitude : places[i].lng });
+        }
       }
 
       places.sort(function(a, b) {
@@ -79,8 +77,8 @@ GC.prototype.fetchPlaces = function(p1, callback) {
           places[i].lat = (coord.split(','))[0];
           places[i].lng = (coord.split(','))[1];
         }
-        resolve();
 
+        resolve();
       });
     });
   }

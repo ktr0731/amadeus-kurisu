@@ -19,8 +19,8 @@ router.post('/callback', function(req, res) {
     let gc = new GC();
     let p = {
       'address' : result.content.location.address,
-      'lat'     : result.content.location.latitude,
-      'lng'     : result.content.location.longitude
+      'lat'     : result.content.location.longitude,
+      'lng'     : result.content.location.latitude
     };
 
     gc.fetchPlaces(p, function(places) {
