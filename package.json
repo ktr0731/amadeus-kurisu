@@ -20,6 +20,7 @@
     "body-parser": "^1.15.0",
     "cheerio-httpcli": "^0.6.7",
     "express": "^4.13.4",
+    "geolib": "^2.0.20",
     "request": "^2.70.0"
   },
   "devDependencies": {}
