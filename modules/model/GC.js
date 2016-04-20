@@ -56,12 +56,6 @@ GC.prototype.fetchPlaces = function(p1, callback) {
         return 0;
       });
 
-      for (var i = 0; i < places.length; i++) {
-        if (places[i].distance !== undefined && !isNaN(places[i].distance)) {
-          console.log(i + "番目 - " + places[i][0].trim() + ': ' + places[i].distance + "(" + places[i].distance/1000 + "km)");
-        }
-      }
-
       callback(places);
     });
   });

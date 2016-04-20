@@ -26,8 +26,11 @@ router.post('/callback', function(req, res) {
     gc.fetchPlaces(p, function(places) {
       let text = '';
       for (let i=0; i < places.length; i++) {
-        text += places[i][0] + "\r\n";
-        text += places[i][1] + "\r\n\r\n";
+        if (!isNaN(places[i].distance)) {
+          text += "[ " + places[i].distance/1000 + " km ]\r\n"
+          text += places[i][0].trim() + "\r\n";
+          text += places[i][1] + "\r\n\r\n";
+        }
       }
 
       content.text = text;
