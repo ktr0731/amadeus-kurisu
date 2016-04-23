@@ -41,9 +41,10 @@ router.post('/callback', function(req, res) {
 
   } else {
     let dialogue = new Dialogue();
-    let message = dialogue.getMessage(content);
+    dialogue.getMessage(content, function(message) {
+      line.send(result.content.from, message);
+    });
 
-    line.send(result.content.from, message);
   }
 
   res.end();
