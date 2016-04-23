@@ -18,3 +18,5 @@ Dialogue.prototype.getMessage = function(content, callback) {
     callback(body.utt);
   });
 };
+
+module.exports = Dialogue;

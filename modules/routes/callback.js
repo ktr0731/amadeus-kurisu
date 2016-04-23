@@ -1,8 +1,8 @@
 "use strict"
 
-var GC       = require('../model/GC.js');
-var Dialogue = require('../model/Dialogue.js');
-var Line     = require('../model/line.js');
+var GC       = require('../model/GC');
+var Dialogue = require('../model/Dialogue');
+var Line     = require('../model/line');
 var express  = require('express');
 var router   = express.Router();
 
