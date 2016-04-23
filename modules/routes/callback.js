@@ -1,9 +1,10 @@
 "use strict"
 
-var GC      = require('../model/GC.js');
-var Line    = require('../model/line.js');
-var express = require('express');
-var router = express.Router();
+var GC       = require('../model/GC.js');
+var Dialogue = require('../model/Dialogue.js');
+var Line     = require('../model/line.js');
+var express  = require('express');
+var router   = express.Router();
 
 router.post('/callback', function(req, res) {
   let line = new Line();
@@ -39,7 +40,10 @@ router.post('/callback', function(req, res) {
     });
 
   } else {
-    line.send(result.content.from, content);
+    let dialogue = new Dialogue();
+    let message = dialogue.getMessage(content);
+
+    line.send(result.content.from, message);
   }
 
   res.end();
