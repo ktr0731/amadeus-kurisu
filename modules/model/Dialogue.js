@@ -10,7 +10,7 @@ Dialogue.prototype.getMessage = function(content, callback) {
     url  : 'https://api.apigw.smt.docomo.ne.jp/dialogue/v1/dialogue?APIKEY=' + process.env.DOCOMO_AMADEUS_API_KEY,
     json : true,
     body : {
-      utt : content
+      utt : content.text
     }
   };
 
