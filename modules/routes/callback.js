@@ -25,7 +25,7 @@ router.post('/callback', function(req, res) {
 
     gc.fetchPlaces(p, function(places) {
       let text = '';
-      for (let i=0; i < places.length; i++) {
+      for (let i=0; i < places.length || i < 5; i++) {
         if (!isNaN(places[i].distance)) {
           text += "[ " + places[i].distance/1000 + " km ]\r\n"
           text += places[i][0].trim() + "\r\n";
