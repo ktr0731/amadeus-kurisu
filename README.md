@@ -1,4 +1,4 @@
-Amadeus Kurisu Makise
+Amadeus Kurisu
 ====
 
                .|'''.|     .             ||                       ||'' ...'|||          .
@@ -17,7 +17,7 @@ Amadeus Kurisu Makise
 
 ## Description
 This is a LINE bot of self-satisfaction.  
-She is Amadeus Makise Kurisu from STEINS;GATE 0.
+She is Amadeus Kurisu from STEINS;GATE 0.
 
 She tells us the shortest distance arcade that has Groove Coaster when we send location information.
 
